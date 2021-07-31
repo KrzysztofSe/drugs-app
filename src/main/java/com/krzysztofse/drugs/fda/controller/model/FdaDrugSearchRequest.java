@@ -32,9 +32,9 @@ public class FdaDrugSearchRequest {
 
     @JsonCreator
     public FdaDrugSearchRequest(
-            final @JsonProperty("manufacturerName") List<String> manufacturerName,
-            final @JsonProperty("brandName") List<String> brandName,
-            final @JsonProperty("paging") Paging paging) {
+            @JsonProperty("manufacturerName") final List<String> manufacturerName,
+            @JsonProperty("brandName") final List<String> brandName,
+            @JsonProperty("paging") final Paging paging) {
         this.manufacturerName = manufacturerName;
         this.brandName = brandName;
         this.paging = isNull(paging) ? Paging.getDefault() : paging;

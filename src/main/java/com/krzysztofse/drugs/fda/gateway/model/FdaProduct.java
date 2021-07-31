@@ -10,7 +10,7 @@ public class FdaProduct {
     private final String productNumber;
 
     @JsonCreator
-    public FdaProduct(final @JsonProperty("product_number") String productNumber) {
+    public FdaProduct(@JsonProperty("product_number") final String productNumber) {
         this.productNumber = productNumber;
     }
 
