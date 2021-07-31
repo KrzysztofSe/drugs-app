@@ -1,8 +1,10 @@
 package com.krzysztofse.drugs.fda.gateway.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultPagingInfo {
 
     private final Integer skip;

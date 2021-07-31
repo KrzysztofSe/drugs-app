@@ -29,10 +29,10 @@ public class DrugSaveRequest {
 
     @JsonCreator
     public DrugSaveRequest(
-            final @JsonProperty("applicationNumber") String applicationNumber,
-            final @JsonProperty("manufacturerName") List<String> manufacturerName,
-            final @JsonProperty("substanceName") List<String> substanceName,
-            final @JsonProperty("productNumbers") List<String> productNumbers) {
+            @JsonProperty("applicationNumber") final String applicationNumber,
+            @JsonProperty("manufacturerName") final List<String> manufacturerName,
+            @JsonProperty("substanceName") final List<String> substanceName,
+            @JsonProperty("productNumbers") final List<String> productNumbers) {
         this.applicationNumber = applicationNumber;
         this.manufacturerName = manufacturerName;
         this.substanceName = substanceName;

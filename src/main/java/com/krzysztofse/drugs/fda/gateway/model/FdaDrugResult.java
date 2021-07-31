@@ -15,9 +15,9 @@ public class FdaDrugResult {
 
     @JsonCreator
     public FdaDrugResult(
-            final @JsonProperty("application_number") String applicationNumber,
-            final @JsonProperty("openfda") OpenFda openFda,
-            final @JsonProperty("products") List<FdaProduct> products) {
+            @JsonProperty("application_number") final String applicationNumber,
+            @JsonProperty("openfda") final OpenFda openFda,
+            @JsonProperty("products") final List<FdaProduct> products) {
         this.applicationNumber = applicationNumber;
         this.openFda = openFda;
         this.products = products;

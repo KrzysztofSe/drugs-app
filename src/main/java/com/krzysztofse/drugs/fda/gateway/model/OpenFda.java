@@ -15,9 +15,9 @@ public class OpenFda {
 
     @JsonCreator
     public OpenFda(
-            final @JsonProperty("brand_name") List<String> brandName,
-            final @JsonProperty("manufacturer_name") List<String> manufacturerName,
-            final @JsonProperty("substance_name") List<String> substanceName) {
+            @JsonProperty("brand_name") final List<String> brandName,
+            @JsonProperty("manufacturer_name") final List<String> manufacturerName,
+            @JsonProperty("substance_name") final List<String> substanceName) {
         this.brandName = brandName;
         this.manufacturerName = manufacturerName;
         this.substanceName = substanceName;
