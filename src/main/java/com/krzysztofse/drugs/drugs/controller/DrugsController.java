@@ -1,5 +1,6 @@
 package com.krzysztofse.drugs.drugs.controller;
 
+import com.krzysztofse.drugs.common.request.PageResponse;
 import com.krzysztofse.drugs.drugs.controller.model.DrugListRequest;
 import com.krzysztofse.drugs.drugs.controller.model.DrugResponse;
 import com.krzysztofse.drugs.drugs.controller.model.DrugSaveRequest;
@@ -8,7 +9,6 @@ import com.krzysztofse.drugs.drugs.service.DrugsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,8 +66,8 @@ public class DrugsController {
     @Operation(summary = "Lists saved drug application records. Supports pagination",
             responses = { @ApiResponse(responseCode = "200", description = "Records retrieved successfully") })
     @PostMapping(path = "/list")
-    public Page<DrugResponse> list(@Valid @RequestBody final DrugListRequest request) {
-        return drugsService.getDrugs(request)
-                .map(drugsMapper::mapResponse);
+    public PageResponse<DrugResponse> list(@Valid @RequestBody final DrugListRequest request) {
+        return PageResponse.from(drugsService.getDrugs(request)
+                .map(drugsMapper::mapResponse));
     }
 }

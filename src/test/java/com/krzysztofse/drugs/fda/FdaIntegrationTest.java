@@ -2,7 +2,7 @@ package com.krzysztofse.drugs.fda;
 
 import com.krzysztofse.drugs.common.IntegrationTest;
 import com.krzysztofse.drugs.common.IntegrationTestBase;
-import com.krzysztofse.drugs.common.ResponsePage;
+import com.krzysztofse.drugs.common.request.PageResponse;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugResponse;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugSearchRequest;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResult;
@@ -38,16 +38,16 @@ public class FdaIntegrationTest extends IntegrationTestBase {
                         .withHeader("Content-type", "application/json")
                         .withBody(objectMapper.writeValueAsString(fixture.searchResultList))));
 
-        ResponseEntity<ResponsePage<FdaDrugResponse>> response = restTemplate.exchange(
+        ResponseEntity<PageResponse<FdaDrugResponse>> response = restTemplate.exchange(
                 fixture.endpointUrl,
                 HttpMethod.POST,
                 new HttpEntity<>(fixture.request),
                 new ParameterizedTypeReference<>() {});
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getSize()).isEqualTo(2);
+        assertThat(response.getBody().getTotal()).isEqualTo(2);
 
-        List<FdaDrugResponse> responseList = response.getBody().toList();
+        List<FdaDrugResponse> responseList = response.getBody().getContent();
         assertThat(responseList.get(0)).usingRecursiveComparison().isEqualTo(fixture.response1);
         assertThat(responseList.get(1)).usingRecursiveComparison().isEqualTo(fixture.response2);
     }
