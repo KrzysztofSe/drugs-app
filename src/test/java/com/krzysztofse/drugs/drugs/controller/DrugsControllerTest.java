@@ -1,6 +1,7 @@
 package com.krzysztofse.drugs.drugs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.krzysztofse.drugs.common.request.PageResponse;
 import com.krzysztofse.drugs.drugs.DrugsFixture;
 import com.krzysztofse.drugs.drugs.controller.model.DrugListRequest;
 import com.krzysztofse.drugs.drugs.controller.model.DrugResponse;
@@ -157,7 +158,8 @@ class DrugsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new PageImpl<>(List.of(fixture.drugResponse, fixture.drugResponse2)))));
+                .andExpect(content().json(objectMapper.writeValueAsString(
+                        new PageResponse<>(2L, List.of(fixture.drugResponse, fixture.drugResponse2)))));
 
         verify(drugsService).getDrugs(refEq(request));
         verify(drugsMapper).mapResponse(fixture.drugDto);

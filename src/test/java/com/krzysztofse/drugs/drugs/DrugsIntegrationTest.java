@@ -2,7 +2,7 @@ package com.krzysztofse.drugs.drugs;
 
 import com.krzysztofse.drugs.common.IntegrationTest;
 import com.krzysztofse.drugs.common.IntegrationTestBase;
-import com.krzysztofse.drugs.common.ResponsePage;
+import com.krzysztofse.drugs.common.request.PageResponse;
 import com.krzysztofse.drugs.drugs.controller.model.DrugListRequest;
 import com.krzysztofse.drugs.drugs.controller.model.DrugResponse;
 import com.krzysztofse.drugs.drugs.controller.model.DrugSaveRequest;
@@ -66,15 +66,15 @@ public class DrugsIntegrationTest extends IntegrationTestBase {
         restTemplate.put(fixture.drugsUrl, fixture.saveRequest1);
         restTemplate.put(fixture.drugsUrl, fixture.saveRequest2);
 
-        ResponseEntity<ResponsePage<DrugResponse>> result = restTemplate.exchange(
+        ResponseEntity<PageResponse<DrugResponse>> result = restTemplate.exchange(
                 fixture.drugsListUrl,
                 HttpMethod.POST,
                 new HttpEntity<>(fixture.listRequest),
                 new ParameterizedTypeReference<>() {});
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody().getSize()).isEqualTo(2);
-        List<DrugResponse> responseList = result.getBody().toList();
+        assertThat(result.getBody().getTotal()).isEqualTo(2);
+        List<DrugResponse> responseList = result.getBody().getContent();
         assertThat(responseList.get(0))
                 .extracting("applicationNumber").isEqualTo(fixture.applicationNumber1);
         assertThat(responseList.get(1))
