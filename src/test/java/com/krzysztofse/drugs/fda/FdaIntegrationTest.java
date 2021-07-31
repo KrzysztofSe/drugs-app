@@ -53,14 +53,14 @@ public class FdaIntegrationTest extends IntegrationTestBase {
     }
 
     public static class Fixture extends FdaFixture {
-        final String applicationNumber = "123";
-        final String applicationNumber2 = "456";
-        final FdaDrugSearchRequest request = buildRequest(manufacturerName, null, 0, 2);
-        final String requestSearch = "(openfda.manufacturer_name:\"man1\")";
-        final FdaDrugResult result = buildFdaDrug(applicationNumber);
-        final FdaDrugResult result2 = buildFdaDrug(applicationNumber2);
-        final FdaDrugResultList searchResultList = buildFdaDrugResultList(List.of(result, result2));
-        final FdaDrugResponse response1 = buildFdaDrugResponse(applicationNumber);
-        final FdaDrugResponse response2 = buildFdaDrugResponse(applicationNumber2);
+        public final String applicationNumber = "123";
+        public final String applicationNumber2 = "456";
+        public final FdaDrugSearchRequest request = buildRequest(manufacturerName, null, 0, 2);
+        public final String requestSearch = "(openfda.manufacturer_name:\"man1\")";
+        public final FdaDrugResult result = buildFdaDrug(applicationNumber);
+        public final FdaDrugResult result2 = buildFdaDrug(applicationNumber2);
+        public final FdaDrugResultList searchResultList = buildFdaDrugResultList(List.of(result, result2));
+        public final FdaDrugResponse response1 = buildFdaDrugResponse(applicationNumber);
+        public final FdaDrugResponse response2 = buildFdaDrugResponse(applicationNumber2);
     }
 }
