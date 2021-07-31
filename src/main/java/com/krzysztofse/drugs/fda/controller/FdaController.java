@@ -4,6 +4,9 @@ import com.krzysztofse.drugs.fda.controller.model.FdaDrugResponse;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugSearchRequest;
 import com.krzysztofse.drugs.fda.service.FdaMapper;
 import com.krzysztofse.drugs.fda.service.FdaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-// TODO documentation
-
+@Tag(name = "FDA", description = "Provides a way to retrieve drug data from openFDA API")
 @RestController
 @RequestMapping(path = "/fda", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FdaController {
@@ -29,6 +31,8 @@ public class FdaController {
         this.fdaMapper = fdaMapper;
     }
 
+    @Operation(summary = "Retrieves drug records from openFDA API. Supports basic filtering and pagination",
+            responses = { @ApiResponse(responseCode = "200", description = "Record saved successfully") })
     @PostMapping(path = "/drugs/search")
     public Page<FdaDrugResponse> search(final @Valid @RequestBody FdaDrugSearchRequest request) {
         return fdaService.getDrugData(request)

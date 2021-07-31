@@ -121,16 +121,16 @@ class FdaGatewayTest {
     }
 
     public static class Fixture extends FdaFixture {
-        final String applicationNumber = "123";
-        final String applicationNumber2 = "456";
-        final String applicationNumberLimit = "1";
-        final String applicationNumberSearch = "(application_number:\"123\")";
-        final FdaDrugSearchRequest request = buildRequest(List.of("manufacturer"), null, 0, 2);
-        final String requestSearch = "(openfda.manufacturer_name:\"manufacturer\")";
-        final FdaDrugResult result = buildFdaDrug(applicationNumber);
-        final FdaDrugResult result2 = buildFdaDrug(applicationNumber2);
-        final FdaDrugResultList resultList = buildFdaDrugResultList(List.of(result));
-        final FdaDrugResultList searchResultList = buildFdaDrugResultList(List.of(result, result2));
+        public final String applicationNumber = "123";
+        public final String applicationNumber2 = "456";
+        public final String applicationNumberLimit = "1";
+        public final String applicationNumberSearch = "(application_number:\"123\")";
+        public final FdaDrugSearchRequest request = buildRequest(List.of("manufacturer"), null, 0, 2);
+        public final String requestSearch = "(openfda.manufacturer_name:\"manufacturer\")";
+        public final FdaDrugResult result = buildFdaDrug(applicationNumber);
+        public final FdaDrugResult result2 = buildFdaDrug(applicationNumber2);
+        public final FdaDrugResultList resultList = buildFdaDrugResultList(List.of(result));
+        public final FdaDrugResultList searchResultList = buildFdaDrugResultList(List.of(result, result2));
 
     }
 

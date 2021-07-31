@@ -53,9 +53,9 @@ class DrugsMapperTest {
     public static class Fixture extends DrugsFixture {
         public final String applicationNumber = "235";
 
-        private final String[] fields = { "id", "manufacturerName", "substanceName", "productNumbers" };
-        private final String[] responseFields = { "applicationNumber", "manufacturerName", "substanceName", "productNumbers" };
-        private final Object[] values = { applicationNumber, manufacturerName, substanceName, productNumbers };
+        public final String[] fields = { "id", "manufacturerName", "substanceName", "productNumbers" };
+        public final String[] responseFields = { "applicationNumber", "manufacturerName", "substanceName", "productNumbers" };
+        public final Object[] values = { applicationNumber, manufacturerName, substanceName, productNumbers };
 
         public final DrugDto drugDto = buildDrugDto(applicationNumber);
         public final DrugDocument drugDocument = buildDrugDocument(applicationNumber);

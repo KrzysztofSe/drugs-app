@@ -131,7 +131,7 @@ class FdaControllerTest {
     }
 
     public static class Fixture extends FdaFixture {
-        private final String applicationNumber = "123";
+        public final String applicationNumber = "123";
         public final FdaDrugDto dto = buildFdaDrugDto(applicationNumber);
         public final FdaDrugResponse response = buildFdaDrugResponse(applicationNumber);
 
