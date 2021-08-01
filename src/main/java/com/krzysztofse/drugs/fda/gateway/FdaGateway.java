@@ -4,6 +4,8 @@ import com.krzysztofse.drugs.common.exception.ApplicationException;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugSearchRequest;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResult;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResultList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Component
 public class FdaGateway {
+
+    private static final Logger logger = LoggerFactory.getLogger(FdaGateway.class);
 
     private final RestTemplate restTemplate;
     private final FdaQueryBuilder fdaQueryBuilder;
@@ -72,6 +76,7 @@ public class FdaGateway {
     }
 
     private Optional<FdaDrugResultList> performRequest(final URI uri) {
+        logger.debug("Sending FDA request: {}", uri);
         return Optional.ofNullable(restTemplate.getForEntity(uri, FdaDrugResultList.class).getBody());
     }
 
@@ -89,6 +94,7 @@ public class FdaGateway {
             case BAD_GATEWAY:
             case GATEWAY_TIMEOUT:
             case SERVICE_UNAVAILABLE:
+                logger.error("FDA service unreachable due to {}", e.getStatusCode());
                 throw new ApplicationException.FdaUnreachableException(FDA_UNREACHABLE_MESSAGE);
             default:
                 throw e;
