@@ -3,6 +3,7 @@ package com.krzysztofse.drugs.fda.gateway;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.krzysztofse.drugs.common.exception.ApplicationException;
 import com.krzysztofse.drugs.fda.FdaFixture;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugSearchRequest;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResult;
@@ -24,6 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 class FdaGatewayTest {
@@ -85,6 +87,25 @@ class FdaGatewayTest {
         Optional<FdaDrugResult> result = fdaGateway.getDrugDataByApplicationNumber(fixture.applicationNumber);
 
         assertThat(result.isPresent()).isFalse();
+
+        wireMockServer.verify(getRequestedFor(urlPathEqualTo(fixture.fdaRootUrl))
+                .withQueryParam("search", equalTo(fixture.applicationNumberSearch))
+                .withQueryParam("limit", equalTo(fixture.applicationNumberLimit)));
+    }
+
+    @Test
+    public void shouldThrowFdaUnreachableExceptionWhenFdaUnreachable() {
+        wireMockServer.stubFor(get(urlPathEqualTo(fixture.fdaRootUrl))
+                .withQueryParam("search", equalTo(fixture.applicationNumberSearch))
+                .withQueryParam("limit", equalTo(fixture.applicationNumberLimit))
+                .willReturn(aResponse()
+                        .withStatus(503)));
+
+        ApplicationException.FdaUnreachableException ex = assertThrows(
+                ApplicationException.FdaUnreachableException.class,
+                () -> fdaGateway.getDrugDataByApplicationNumber(fixture.applicationNumber));
+
+        assertThat(ex.getMessage()).isEqualTo("FDA service is unreachable at this time.");
 
         wireMockServer.verify(getRequestedFor(urlPathEqualTo(fixture.fdaRootUrl))
                 .withQueryParam("search", equalTo(fixture.applicationNumberSearch))

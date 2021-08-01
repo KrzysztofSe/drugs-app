@@ -12,4 +12,10 @@ public class ApplicationException extends RuntimeException {
         }
     }
 
+    public static class FdaUnreachableException extends ApplicationException {
+        public FdaUnreachableException(final String message) {
+            super(message);
+        }
+    }
+
 }

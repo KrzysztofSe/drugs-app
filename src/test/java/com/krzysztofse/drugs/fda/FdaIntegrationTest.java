@@ -52,6 +52,23 @@ public class FdaIntegrationTest extends IntegrationTestBase {
         assertThat(responseList.get(1)).usingRecursiveComparison().isEqualTo(fixture.response2);
     }
 
+    @Test
+    public void shouldThrowServiceUnavailableWhenFdaUnreachable() {
+        wireMockServer.stubFor(get(urlPathEqualTo(fixture.fdaRootUrl))
+                .withQueryParam("search", equalTo(fixture.requestSearch))
+                .withQueryParam("skip", equalTo(fixture.request.getPaging().getSkip().toString()))
+                .withQueryParam("limit", equalTo(fixture.request.getPaging().getPageSize().toString()))
+                .willReturn(aResponse().withStatus(503)));
+
+        ResponseEntity<PageResponse<FdaDrugResponse>> response = restTemplate.exchange(
+                fixture.endpointUrl,
+                HttpMethod.POST,
+                new HttpEntity<>(fixture.request),
+                new ParameterizedTypeReference<>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     public static class Fixture extends FdaFixture {
         public final String applicationNumber = "123";
         public final String applicationNumber2 = "456";

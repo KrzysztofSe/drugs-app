@@ -37,9 +37,12 @@ public class DrugsController {
     }
 
     @Operation(summary = "Saves a drug application record with specified application number directly from openFDA",
+            description = "This operation is an 'upsert': it will insert a record if it doesn't exist, or replace " +
+                    "a record with given id if it already exists.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Record saved successfully"),
-                    @ApiResponse(responseCode = "404", description = "Record not found in the openFDA database")})
+                    @ApiResponse(responseCode = "404", description = "Record not found in the openFDA database"),
+                    @ApiResponse(responseCode = "503", description = "FDA service unreachable") })
     @PutMapping(path = "/{applicationNumber}")
     public ResponseEntity<Void> saveFromFda(final @PathVariable String applicationNumber) {
         drugsService.saveDrugDataFromFdaByApplicationNumber(applicationNumber);
@@ -47,6 +50,8 @@ public class DrugsController {
     }
 
     @Operation(summary = "Saves a specified drug application record",
+            description = "This operation is an 'upsert': it will insert a record if it doesn't exist, or replace " +
+                    "a record with given id if it already exists.",
             responses = { @ApiResponse(responseCode = "200", description = "Record saved successfully") })
     @PutMapping
     public ResponseEntity<Void> save(final @Valid @RequestBody DrugSaveRequest request) {

@@ -32,7 +32,11 @@ public class FdaController {
     }
 
     @Operation(summary = "Retrieves drug records from openFDA API. Supports basic filtering and pagination",
-            responses = { @ApiResponse(responseCode = "200", description = "Record saved successfully") })
+            description = "Supports an array of manufacturers and brands. " +
+                    "All given search terms will be joined with a logical 'AND'.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Results retrieved successfully"),
+                    @ApiResponse(responseCode = "503", description = "FDA service unreachable") })
     @PostMapping(path = "/drugs/search")
     public PageResponse<FdaDrugResponse> search(final @Valid @RequestBody FdaDrugSearchRequest request) {
         return PageResponse.from(fdaService.getDrugData(request)
