@@ -18,4 +18,12 @@ public class ExceptionHandlerControllerAdvice {
         return new ErrorResponse(Optional.ofNullable(e.getMessage())
                 .orElse("Not found"));
     }
+
+    @ExceptionHandler({ ApplicationException.FdaUnreachableException.class })
+    @ResponseBody
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ErrorResponse handleFdaUnreachable(final RuntimeException e) {
+        return new ErrorResponse(Optional.ofNullable(e.getMessage())
+                .orElse("FDA unreachable"));
+    }
 }

@@ -1,12 +1,13 @@
 package com.krzysztofse.drugs.fda.gateway;
 
+import com.krzysztofse.drugs.common.exception.ApplicationException;
 import com.krzysztofse.drugs.fda.controller.model.FdaDrugSearchRequest;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResult;
 import com.krzysztofse.drugs.fda.gateway.model.FdaDrugResultList;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,6 +24,8 @@ public class FdaGateway {
     private static final String SEARCH_PARAM = "search";
     private static final String SKIP_PARAM = "skip";
     private static final String LIMIT_PARAM = "limit";
+
+    private static final String FDA_UNREACHABLE_MESSAGE = "FDA service is unreachable at this time.";
 
     public FdaGateway(
             final RestTemplate restTemplate,
@@ -44,10 +47,9 @@ public class FdaGateway {
         try {
             return performRequest(uri);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                return Optional.empty();
-            }
-            throw e;
+            return handleClientException(e);
+        } catch (HttpServerErrorException e) {
+            return handleServerException(e);
         }
     }
 
@@ -63,14 +65,33 @@ public class FdaGateway {
                     .filter(body -> !body.getResults().isEmpty())
                     .map(body -> body.getResults().get(0));
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                return Optional.empty();
-            }
-            throw e;
+            return handleClientException(e);
+        } catch (HttpServerErrorException e) {
+            return handleServerException(e);
         }
     }
 
     private Optional<FdaDrugResultList> performRequest(final URI uri) {
         return Optional.ofNullable(restTemplate.getForEntity(uri, FdaDrugResultList.class).getBody());
+    }
+
+    private <T> Optional<T> handleClientException(final HttpClientErrorException e) {
+        switch (e.getStatusCode()) {
+            case NOT_FOUND:
+                return Optional.empty();
+            default:
+                throw e;
+        }
+    }
+
+    private <T> Optional<T> handleServerException(final HttpServerErrorException e) {
+        switch (e.getStatusCode()) {
+            case BAD_GATEWAY:
+            case GATEWAY_TIMEOUT:
+            case SERVICE_UNAVAILABLE:
+                throw new ApplicationException.FdaUnreachableException(FDA_UNREACHABLE_MESSAGE);
+            default:
+                throw e;
+        }
     }
 }
